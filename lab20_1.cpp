@@ -20,21 +20,86 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string filename, vector<string> &names, vector<int> &scores, vector<char> &grades){
+    ifstream file(filename);
+    string text;
+    char name[100];
+    char format[] = "%[^:]: %d %d %d";   //ใส่ , มีผล
+    int a, b, c, sum = 0;
 
+    while(getline(file, text)){
+        sscanf(text.c_str(), format, name, &a, &b, &c);
+        sum = a + b + c;
+        names.push_back(name);
+        scores.push_back(sum);
+        grades.push_back(score2grade(sum));
+    }
 }
 
-void getCommand(){
-
+void getCommand(string &command, string &key){
+    cout << "Please input your command: ";
+    cin >> command;
+    if(toUpperStr(command) == "NAME" || toUpperStr(command) == "GRADE"){
+        cin.ignore();
+        getline(cin, key);
+    }
+    else{
+        getline(cin, key);
+    }
 }
 
-void searchName(){
+void searchName(vector<string> name, vector<int> score, vector<char> grade, string key){
+    unsigned int i = 0;
+    bool isFound = false;
+    cout << "---------------------------------\n";
 
+    while(i < name.size()){
+        if(toUpperStr(key) == toUpperStr(name[i])){
+            printf("%s's score = %d\n%s's grade = %c\n",name[i].c_str(),score[i],name[i].c_str(),grade[i]);
+            isFound = true;
+            break;
+        }
+        i++;
+    }
+    if(!isFound) cout << "Cannot found.\n";
+    cout << "---------------------------------\n";
 }
 
-void searchGrade(){
+/*  int x=0;
+    cout << "---------------------------------" << endl;
+    for(unsigned int i=0; i<names.size(); i++)
+        if(key == toUpperStr(names[i])){
+            cout << names[i] << "'s score = " << scores[i] << endl;
+            cout << names[i] << "'s grade = " << grades[i] << endl;
+            x++;
+        } else if(i == names.size()-1 and x == 0) cout << "Cannot found.\n";
+    cout << "---------------------------------" << endl;*/
 
+void searchGrade(vector<string> &names, vector<int> &scores, vector<char> &grades, string key){
+    int x = 0;
+    cout << "---------------------------------" << endl;
+    for(unsigned int i = 0; i<grades.size(); i++)
+        if(*key.c_str() == grades[i]){
+            cout << names[i] << " (" << scores[i] << ")" << endl;
+            x++;
+        } else if(i == grades.size() - 1 and x == 0) cout << "Cannot found.\n";
+    cout << "---------------------------------" << endl;
 }
+
+    /* unsigned int i = 0;
+    bool isFound = false;
+    string key2 = toUpperStr(key);
+    cout << "---------------------------------\n";
+
+    while(i < grade.size()){
+        if(key2[0] == grade[i]){
+            printf("%s (%d)\n",name[i].c_str(),score[i]);
+            isFound = true;
+        }
+        i++;
+    }
+    if(!isFound) cout << "Cannot found.\n";
+    cout << "---------------------------------\n";*/
 
 
 int main(){
